@@ -1,0 +1,190 @@
+<meta charset="UTF-8">
+<canvas width="600" height="400"></canvas>
+
+<script>
+	
+var tela = document.querySelector('canvas'),
+	pincel = tela.getContext('2d');
+
+var posicaoX = [15, 86.5, 158, 229.5, 301, 372.5, 444, 515.5, 15, 158, 301, 444, 15, 158, 301, 444, 158, 301, 444],
+	posicaoXTexto = [21, 88, 174, 255, 325, 398, 463, 536, 75, 218, 361, 504, 75, 217, 361, 504, 217, 361, 504],
+	posicaoYTexto = [127, 127, 127, 122, 132, 125, 123, 123, 187, 187, 187, 187, 275, 275, 275, 275, 363, 363, 363],
+	texto = ["AC", "<X", "%", "/", "*", "-", "+", "=", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", ","],
+	yAlturaBotao = [85, 85, 85, 85, 85, 85, 85, 85, 137, 137, 137, 137, 222.3, 222.3, 222.3, 222.3, 307.6, 307.6, 307.6],
+	yTamanhoAlturaTecla = [50, 50, 50, 50, 50, 50, 50, 50, 83.3, 83.3, 83.3, 83.3, 83.3, 83.3, 83.3, 83.3, 83.3, 83.3, 83.3],
+	xTamanhoLarguraTecla = [69.5, 69.5, 69.5, 69.5, 69.5, 69.5, 69.5, 69.5, 141, 141, 141, 141, 141, 141, 141, 141, 141, 141, 141];
+
+var numeroMonitor = "",
+	operação,
+	valor1,
+	valor2,
+	resultado;
+
+function desenhaTecla(cor, posicaoX, yAltura, xTamanhoLargura, yTamanhoAltura, corBorda) {
+	pincel.fillStyle = cor;
+	pincel.fillRect(posicaoX, yAltura, xTamanhoLargura, yTamanhoAltura);
+	pincel.strokeStyle = corBorda;
+	pincel.strokeRect(posicaoX, yAltura, xTamanhoLargura, yTamanhoAltura);
+}
+
+function escreveTextoTecla(cor, texto, posicaoX, posicaoY) {
+	pincel.font='45px Georgia';
+    pincel.fillStyle = cor;
+    pincel.fillText(texto, posicaoX, posicaoY);
+}
+
+function desenhaTodasTeclas() {
+	for(var i = 0; i < posicaoX.length; i++) {
+		desenhaTecla("black", posicaoX[i], yAlturaBotao[i], xTamanhoLarguraTecla[i], yTamanhoAlturaTecla[i], "white");
+		escreveTextoTecla("green", texto[i], posicaoXTexto[i], posicaoYTexto[i]);
+	}
+}
+
+function desenhaTela() {
+	pincel.fillStyle = "black";
+	pincel.fillRect(0, 0, 600, 400);
+}
+
+function desenhaMonitor() {
+	pincel.fillStyle = "white";
+	pincel.fillRect(15, 15, 570, 65);
+	escreveTextoTecla("green", numeroMonitor, 17, 60);
+}
+
+function executaOperação() {
+	switch(operação) {
+			case "adição": 
+				valor2 = numeroMonitor;
+				resultado = parseFloat(valor1) + parseFloat(valor2);
+				numeroMonitor = resultado;
+				desenhaMonitor()
+				break;
+			case "subtração":
+				valor2 = numeroMonitor;
+				resultado = parseFloat(valor1) - parseFloat(valor2);
+				numeroMonitor = resultado;
+				desenhaMonitor()
+				break;
+			case "multiplicação":
+				valor2 = numeroMonitor;
+				resultado = parseFloat(valor1) * parseFloat(valor2);
+				numeroMonitor = resultado;
+				desenhaMonitor()
+				break;
+			case "divisão":
+				valor2 = numeroMonitor;
+				resultado = parseFloat(valor1) / parseFloat(valor2);
+				numeroMonitor = resultado;
+				desenhaMonitor()
+				break;	
+	}
+}
+
+function clica(evento) {
+	var x = evento.pageX - tela.offsetLeft;
+	var y = evento.pageY - tela.offsetTop;
+	console.log(x, y);
+
+	if(x > 15 && y > 85 && x < 84.5 && y < 135) {
+		disparaAC();
+	}
+
+	if(x > 86.5 && y > 85 && x < 156 && y < 135) {
+		disparaX();
+	}
+
+	if(x > 158 && y > 85 && x < 227.5 && y < 135) {
+		disparaPercentual();
+	}
+	if(x > 229.5 && y > 85 && x < 299 && y < 135) {
+		operação = "divisão";
+		valor1 = numeroMonitor;
+		numeroMonitor = "";
+		desenhaMonitor();
+	}
+	if(x > 301 && y > 85 && x < 370.5 && y < 135) {
+		operação = "multiplicação";
+		valor1 = numeroMonitor;
+		numeroMonitor = "";
+		desenhaMonitor();
+	}
+	if(x > 372.5 && y > 85 && x < 442 && y < 135) {
+		operação = "subtração";
+		valor1 = numeroMonitor;
+		numeroMonitor = "";
+		desenhaMonitor();
+	}
+	if(x > 444 && y > 85 && x < 513.5 && y < 135) {
+		operação = "adição";
+		valor1 = numeroMonitor;
+		numeroMonitor = "";
+		desenhaMonitor();
+	}
+	if(x > 515.5 && y > 85 && x < 585 && y < 135) {
+		executaOperação()
+	}
+	if(x > 15 && y > 137 && x < 156 && y < 220.3) {
+		digitaNumero("1");
+	}
+	if(x > 158 && y > 137 && x < 299 && y < 220.3) {
+		digitaNumero("2");
+	}
+	if(x > 301 && y > 137 && x < 442 && y < 220.3) {
+		digitaNumero("3");
+	}
+	if(x > 444 && y > 137 && x < 585 && y < 220.3) {
+		digitaNumero("4");
+	}
+	if(x > 15 && y > 222.3 && x < 156 && y < 305.6) {
+		digitaNumero("5");
+	}
+	if(x > 158 && y > 222.3 && x < 299 && y < 305.6) {
+		digitaNumero("6");
+	}
+	if(x > 301 && y > 222.3 && x < 442 && y < 305.6) {
+		digitaNumero("7");
+	}
+	if(x > 444 && y > 222.3 && x < 585 && y < 305.6) {
+		digitaNumero("8");
+	}
+	if(x > 158 && y > 307.6 && x < 299 && y < 390.9) {
+		digitaNumero("9");
+	}
+	if(x > 301 && y > 307.6 && x < 442 && y < 390.9) {
+		digitaNumero("0");
+	}
+	if(x > 444 && y > 307.6 && x < 585 && y < 390.9) {
+		digitaNumero(".");
+	}
+}
+
+function disparaAC() {
+	numeroMonitor = "";
+	desenhaMonitor();
+}
+
+function disparaX() {
+	numeroMonitor = numeroMonitor.toString();
+	numeroMonitor = numeroMonitor.substring(0, numeroMonitor.length -1);
+	desenhaMonitor();
+}
+
+function disparaPercentual() {
+	if(numeroMonitor != "") {
+	numeroMonitor = numeroMonitor/100;
+	desenhaMonitor();
+	}
+}
+
+function digitaNumero(comando) {
+	numeroMonitor = numeroMonitor.toString();
+	numeroMonitor = numeroMonitor.substring(0) + comando;
+	desenhaMonitor();
+}
+
+desenhaTela();
+desenhaMonitor();
+desenhaTodasTeclas();
+tela.onclick = clica;
+
+</script>
