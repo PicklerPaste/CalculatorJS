@@ -2,7 +2,7 @@
 
 Iniciativa para melhorar a consciência e habilidades em JS
 
-| :placard: Vitrine.Dev |     |
+| calculator-js |     |
 | -------------  | --- |
 | :sparkles: Nome        | **Calculator JS**
 | :label: Tecnologias | javascript
